@@ -2,9 +2,19 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
+using NUnit.Framework.Internal;
+
+enum Round
+{
+    ONE,
+    TWO,
+    THREE
+}
 
 public class GameScript : MonoBehaviour
-{
+{   
+    UnityEvent askPlayer;
     //References
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] TextMeshProUGUI chatText;
@@ -16,6 +26,8 @@ public class GameScript : MonoBehaviour
     [SerializeField] int currentBlock = 0;
     //This is for player reponse.
     public bool yieldForAnswer;
+    private int trackedValue;
+    private Round currentRound = Round.ONE;
 
     //Player Dialogue
     [SerializeField] List<TextBlock> option1 = new List<TextBlock> { };
@@ -40,8 +52,8 @@ public class GameScript : MonoBehaviour
     void Start()
     {
         //copying chunk 1 into current.
-        current.AddRange(chunk1);
-        UpdateChunkLength();
+        LoadChunk(chunk1);
+        Next();
     }
 
     // Update is called once per frame
@@ -57,23 +69,6 @@ public class GameScript : MonoBehaviour
         png.sprite = block.charPng;
     }
 
-    void UpdateChunkLength()
-    {
-        //resetting length before each call;
-        chunkLen = 0;
-        if (current == null)
-        {
-            Debug.Log("No chunk loaded.");
-            return;
-        }
-
-        foreach (TextBlock block in current){
-            chunkLen++;
-            Debug.Log("Chunk Length: " + chunkLen);
-        }
-    }
-
-
     /// <summary>
     /// This function will handle going to the next chunk data by using the button event system
     /// embeeded within unity event.
@@ -84,9 +79,82 @@ public class GameScript : MonoBehaviour
     public void Next()
     {
         //go to the next dialogue
-        if(currentBlock >= chunkLen)
+        if(currentBlock < current.Count)
         {
             UpdateUI(current[currentBlock]);
+            currentBlock++;
         }
+        //if done
+        askPlayer?.Invoke();
     }
+
+    /// <summary>
+    /// This function will serve to invoke askPlayer event which the player chooses a dialogue option.
+    /// the Buttons will be mapped to -1, 0, 1. Based on that it will load the next chunk.
+    /// </summary>
+    public void PathDecider()
+    {
+        int val = ButtonSetter.clickedValue;
+        if(currentRound == Round.ONE)
+        {
+            Debug.Log("Round 1 finished");
+            
+            switch (val)
+            {
+                case 1:
+                    Debug.Log("Good");
+                    LoadChunk(chunk2a); 
+                    break;
+                case 2:
+                    Debug.Log("Neutral");
+                    LoadChunk(chunk2b); 
+                    break;
+                case 3:
+                    Debug.Log("Bad");
+                    LoadChunk(chunk2c); 
+                    break;
+                default:
+                    Debug.Log("unknown error");
+                    break;
+            }
+            currentRound = Round.TWO;
+
+        }else if(currentRound == Round.TWO)
+        {
+            Debug.Log("Round 2 fin");
+            switch (val)
+            {
+                case 1:
+                    Debug.Log("Good");
+                    LoadChunk(chunk3a); 
+                    break;
+                case 2:
+                    Debug.Log("Neutral");
+                    LoadChunk(chunk3b); 
+                    break;
+                case 3:
+                    Debug.Log("Bad");
+                    LoadChunk(chunk3c); 
+                    break;
+                default:
+                    Debug.Log("unknown error");
+                    break;
+            }
+            currentRound = Round.THREE;
+        }else if(currentRound == Round.THREE)
+        {
+            Debug.Log("Level finished");
+        }
+
+        Next();
+    }
+
+    private void LoadChunk(List<TextBlock> chunk)
+    {
+        current.Clear();
+        current.AddRange(chunk);
+        currentBlock = 0;
+        
+    }
+
 }

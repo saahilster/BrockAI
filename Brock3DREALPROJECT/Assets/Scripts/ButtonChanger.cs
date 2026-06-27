@@ -18,6 +18,12 @@ public class ButtonChanger : MonoBehaviour
 
     [SerializeField] private TextBlock selectedResponse;
 
+
+    void Start()
+    {
+        choiceText.text = previews[0].dialogue;
+        selectedResponse = responses[0];
+    }
     public void UpdateButtonText()
     {
         Round round = gs.currentRound;

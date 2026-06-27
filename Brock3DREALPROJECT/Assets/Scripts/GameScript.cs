@@ -43,12 +43,13 @@ public class GameScript : MonoBehaviour
     [SerializeField] List<TextBlock> chunk3b = new List<TextBlock> { };
     [SerializeField] List<TextBlock> chunk3c = new List<TextBlock> { };
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         decisionBoard.SetActive(false);
         currentRound = Round.ONE;
         //copying chunk 1 into current.
         LoadChunk(chunk1);
+        UpdateUI(chunk1[0]);
     }
 
     // Update is called once per frame

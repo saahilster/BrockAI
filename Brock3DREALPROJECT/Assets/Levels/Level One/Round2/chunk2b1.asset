@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea2409bde2c79ef42bca26611cb3295c, type: 3}
-  m_Name: r2_bad
+  m_Name: chunk2b1
   m_EditorClassIdentifier: Assembly-CSharp::TextBlock
-  dialogue: 'Get him flowers, but not just any flowers, the male equivalent of flowers. '
-  charName: BrokAI
-  charPng: {fileID: 0}
+  dialogue: 
+  charName: Elon Musk
+  charPng: {fileID: 21300000, guid: 72be846de0b067a47b7dec79dbf09b6b, type: 3}
